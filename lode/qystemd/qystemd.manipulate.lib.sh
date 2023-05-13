@@ -106,8 +106,8 @@ qystemd_install() {
   is_qortrollor_installed || fail 'Qortrollor is not installed.'
   if systemd_mode_is_user; then
     #    messagize "QYSTEMD INSTALL: USER MODE"
-    messagize "Consider running: sudo loginctl enable-linger ${USER}"
-    messagize "See readme 'Qystemd' for more info."
+    messagize_noisy "Consider running: sudo loginctl enable-linger ${USER}"
+    messagize_noisy "See readme 'Section:Qystemd' for more info."
   fi
   create_config_files
   #  get_unit_name

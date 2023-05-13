@@ -635,6 +635,12 @@ error() {
 }
 
 messagize() {
+  print_color '38;5;94' "MESSAGE: $*" #dscreet yellowish:
+  #  print_color '1;33' "MESSAGE: $*" #bright yellow:
+}
+
+messagize_noisy() {
+  #  print_color '38;5;94' "MESSAGE: $*" #dscreet yellowish:
   print_color '1;33' "MESSAGE: $*" #bright yellow:
 }
 
@@ -663,8 +669,8 @@ debug_func() {
 
 _debug() {
   is_noisy &&
-    print_color '38;5;240' "$*" #greyish 144
-#    print_color '1;37' "$*" #greyish
+    print_color '38;5;240' "$*" #dark greyish
+  #    print_color '1;37' "$*" #greyish
 }
 
 print_color() {

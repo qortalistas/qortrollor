@@ -135,6 +135,7 @@ The yaml can contain multiple configurations.
   for using the 'xdg' thingy, qystemd uses the directory ~/config/qotrollor.
 * When installing qystemd the service is 'enabled' but not 'started'.
     * Thus, the node will not start automatically after installation. But it will after a reboot.
+      * (Caveat: Se below about user-services-at-boot). 
     * You can 'systemd-start' the node with the script 'start_qortrollor_systemd.sh'.
     * But it is probably wise to first check the settings.yaml. and try start/stop manually at first.
 
