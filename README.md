@@ -63,6 +63,10 @@ Though part of the idea is that yaml should be more user-friendly to edit than j
     * Your original settings from settings.json will be available in the yaml.
     * See: "Editing Yaml".
 
+### Editing .env
+
+TODO write ...
+
 ### Editing Yaml
 
 The yaml can contain multiple configurations.
@@ -75,7 +79,7 @@ The yaml can contain multiple configurations.
 * Thus;
   ```yaml
   active_section_name: original
-    ```
+  ```
 * will revert the configuration to the original config.
 * Or you can invent a new section name and fiddle.
 * Here is the default lite config section as a showcase:
