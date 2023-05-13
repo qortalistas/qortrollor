@@ -143,7 +143,7 @@ The yaml can contain multiple configurations.
 * Normally you will not run qortal as root, but as some other user.
 * If this user is not logging in at boot, then systemd-services for that user will not automatically start.
 * This can be enabled, but it requires root access to enable:
-  ```Shell.sh
+  ```console
   sudo loginctl enable-linger <USERNAME>
   ```
   Then at boot a login session is created for the specified user,
