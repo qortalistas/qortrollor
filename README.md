@@ -146,8 +146,8 @@ The yaml can contain multiple configurations.
   ```bash
   sudo loginctl enable-linger <USERNAME>
   ```
-  Then at boot a login session is created for the specified user, and (enabled) systemd-services for this user will start at
-  boot.
+  Then at boot a login session is created for the specified user,
+  and (enabled) systemd-services for this user will start at boot.
 
 ### Progress:
 
