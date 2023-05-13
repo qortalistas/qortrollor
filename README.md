@@ -137,11 +137,22 @@ The yaml can contain multiple configurations.
     * Thus, the node will not start automatically after installation. But it will after a reboot.
     * You can 'systemd-start' the node with the script 'start_qortrollor_systemd.sh'.
     * But it is probably wise to first check the settings.yaml. and try start/stop manually at first.
+
+#### Systemd-user-services are not started at boot
+
+* Normally you will not run qortal as root, but as some other user.
+* If this user is not logging in at boot, then systemd-services for that user will not automatically start.
+* This can be enabled, but it requires root access to enable:
+  ``` bash
+  sudo loginctl enable-linger <USERNAME>
+  ```
+
+
 * I just discovered a problem:
-  * Systemd-user-services are not started at boot.
-      * Looking into it ...
-      * "loginctl enable-linger USERNAME" solves the issue, but this apparently requires root ...
-      * Pondering how to communicate this to the user ...
+    * Systemd-user-services are not started at boot.
+        * Looking into it ...
+        * "loginctl enable-linger USERNAME" solves the issue, but this apparently requires root ...
+        * Pondering how to communicate this to the user ...
 
 ### Progress:
 

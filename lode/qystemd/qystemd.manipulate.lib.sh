@@ -47,6 +47,10 @@ init_vars() {
   # Switch between system and user mode:
   #    QYSTEMD_SYSTEMD_MODE='system'
   QYSTEMD_SYSTEMD_MODE='user'
+  if is_user_root; then
+    QYSTEMD_SYSTEMD_MODE='system'
+    debug "Running as root, switching QYSTEMD_SYSTEMD_MODE to: ${QYSTEMD_SYSTEMD_MODE}"
+  fi
   if systemd_mode_is_user; then
     SYSTEM_CTL="$(which systemctl) --user "
     JOURNAL_CTL="$(which journalctl) --user "
@@ -100,6 +104,11 @@ qystemd_install() {
   debug_func
   messagize "QYSTEMD INSTALL"
   is_qortrollor_installed || fail 'Qortrollor is not installed.'
+  if systemd_mode_is_user; then
+    #    messagize "QYSTEMD INSTALL: USER MODE"
+    messagize "Consider running: sudo loginctl enable-linger ${USER}"
+    messagize "See readme 'Qystemd' for more info."
+  fi
   create_config_files
   #  get_unit_name
   systemd__install_unit "$(get_unit_name)"
@@ -166,16 +175,46 @@ qystemd_habitastallation() {
   done
 }
 
+systemctl_command() {
+  debug_func
+  debug "${SYSTEM_CTL}" "$@"
+  ${SYSTEM_CTL} "$@"
+}
+
+#systemctl_command() {
+#  local quiet
+#  quiet=false
+#
+#  is_systemctl_noisy() {
+#    [[ "${quiet}" == 'false' ]]
+#  }
+#
+#  if [[ $1 == '--quiet' ]]; then
+#    shift
+#    quiet=true
+#  fi
+#
+#  debug_func
+#
+#  #  if is_systemctl_noisy; then
+#  debug "${SYSTEM_CTL}" "$@"
+#  #  fi
+#
+#  ${SYSTEM_CTL} "$@"
+#}
+
 systemd_start_service() {
-  ${SYSTEM_CTL} start "$(get_unit_name)"
+  systemctl_command start "$(get_unit_name)"
+  #  ${SYSTEM_CTL} start "$(get_unit_name)"
 }
 
 systemd_stop_service() {
-  ${SYSTEM_CTL} stop "$(get_unit_name)"
-  #  local name
-  #  name="$(get_unit_name)"
-  #  #  defunc "${name}"
-  #  ${SYSTEM_CTL} stop "${name}"
+  systemctl_command stop "$(get_unit_name)"
+  #  ${SYSTEM_CTL} stop "$(get_unit_name)"
+  #  #  local name
+  #  #  name="$(get_unit_name)"
+  #  #  #  defunc "${name}"
+  #  #  ${SYSTEM_CTL} stop "${name}"
 }
 
 systemd__install_unit() {
@@ -186,10 +225,11 @@ systemd__install_unit() {
     systemd__uninstall_unit "${name}"
   fi
   file="$(systemd_origin_file "${name}")"
-  ${SYSTEM_CTL} link "${file}"
-  #  txt="$(${SYSTEM_CTL} cat "${name}" 2>/dev/null)"
-  #  line1="$(echo "$txt" | head -n 1)"
-  #  debug "${line1}"
+  systemctl_command link "${file}"
+  #  ${SYSTEM_CTL} link "${file}"
+  #  #  txt="$(${SYSTEM_CTL} cat "${name}" 2>/dev/null)"
+  #  #  line1="$(echo "$txt" | head -n 1)"
+  #  #  debug "${line1}"
 }
 
 systemd__uninstall_unit() {
@@ -197,7 +237,8 @@ systemd__uninstall_unit() {
   local name
   name="$1"
   if systemd_exists_unit "${name}"; then
-    ${SYSTEM_CTL} disable "${name}"
+    systemctl_command disable "${name}"
+    #    ${SYSTEM_CTL} disable "${name}"
   else
     debug "No unit file for: ${name}"
   fi
@@ -215,18 +256,20 @@ systemd_enable_unit() {
   debug_func
   local name
   name="$1"
-  ${SYSTEM_CTL} enable "${name}"
+  systemctl_command enable "${name}"
+  #  ${SYSTEM_CTL} enable "${name}"
 }
 
 systemd_disable_unit() {
   debug_func
   local name
   name="$1"
-  #  if [[ "${unit_type}" == 'timer' ]]; then
-  #    ${SYSTEM_CTL} stop "${name}"
-  #    ${SYSTEM_CTL} clean --what=state "${name}"
-  #  fi
-  ${SYSTEM_CTL} disable "${name}"
+  systemctl_command disable "${name}"
+  #  #  if [[ "${unit_type}" == 'timer' ]]; then
+  #  #    ${SYSTEM_CTL} stop "${name}"
+  #  #    ${SYSTEM_CTL} clean --what=state "${name}"
+  #  #  fi
+  #  ${SYSTEM_CTL} disable "${name}"
 }
 
 get_systemd_unit_file() {
@@ -234,6 +277,8 @@ get_systemd_unit_file() {
   local name
   name="$1"
   local path
+
+  #  if txt="$(${SYSTEM_CTL} cat "${name}" 2>/dev/null)"; then
   if txt="$(${SYSTEM_CTL} cat "${name}" 2>/dev/null)"; then
     #    echo "txt: $txt"
     line1="$(echo "$txt" | head -n 1)"

@@ -639,7 +639,7 @@ messagize() {
 }
 
 debug() {
-  _debug "$*"
+  _debug "DEBUG: $*"
 }
 
 debug_var() {
@@ -663,7 +663,8 @@ debug_func() {
 
 _debug() {
   is_noisy &&
-    print_color '1;37' "$*" #greyish
+    print_color '38;5;240' "$*" #greyish 144
+#    print_color '1;37' "$*" #greyish
 }
 
 print_color() {
@@ -679,6 +680,10 @@ is_noisy() {
 
 is_number() {
   [[ $1 =~ ^[0-9]+$ ]]
+}
+
+is_user_root() {
+  [[ ${EUID} == 0 ]]
 }
 
 texting() {
