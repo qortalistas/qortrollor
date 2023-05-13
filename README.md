@@ -135,9 +135,17 @@ The yaml can contain multiple configurations.
   for using the 'xdg' thingy, qystemd uses the directory ~/config/qotrollor.
 * When installing qystemd the service is 'enabled' but not 'started'.
     * Thus, the node will not start automatically after installation. But it will after a reboot.
-      * (Caveat: Se below about user-services-at-boot). 
+        * (Caveat: Se below about user-services-at-boot).
     * You can 'systemd-start' the node with the script 'start_qortrollor_systemd.sh'.
     * But it is probably wise to first check the settings.yaml. and try start/stop manually at first.
+* Do not use "systemctl --user disable qortrollor.service".
+    * Rather use the installor-script to uninstall only qystemd.
+        * This is because the service-file is installed by linking,
+          and will thus be completely removed when disabling,
+          so you will not be able to simply re-enable it.
+          and qystemd will be left crippled and confused.
+        * The installor is equipped to handle the need to dis/en-able the qortrollor service.
+        * If qystemd has been confusionized un- and re-install it.
 
 #### Systemd-user-services are not started at boot
 
@@ -155,6 +163,8 @@ The yaml can contain multiple configurations.
 * The code is currently littered with out-commented garbage, so cleanage is due.
 * So far it has only been tested by me, so if anyone bites, the expected unforeseen snafus are expected
   and code will need according modifications.
+* I have begun implementation of a status-script:
+  * ./lode/status.sh
 
 ### Further:
 

@@ -771,6 +771,23 @@ toggle_install() {
     install_modify install
   fi
 }
+
+status() {
+  debug_func
+  local txt
+  txt="NOT INSTALLED"
+  if is_qortrollor_installed; then
+    txt="INSTALLED"
+  fi
+  messagize "Qotrollor is ${txt}"
+  txt="NOT INSTALLED"
+  if is_qystemd_installed; then
+    messagize "Qystemd is INSTALLED"
+    qystemd_status
+  else
+    messagize "Qystemd is NOT INSTALLED"
+  fi
+}
 # endregion develop
 
 # region init_lib

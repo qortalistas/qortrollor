@@ -139,6 +139,23 @@ qystemd_stop() {
   systemd_stop_service
 }
 
+qystemd_status() {
+  debug_func
+  if systemd_exists_unit; then
+    #    messagize "STATUS:"
+    #    systemctl_command status "$(get_unit_name)"
+    if systemctl_command --quiet 'is-enabled' "$(get_unit_name)"; then
+      is_enabled='enabled'
+      messagize "UNIT file: $(get_systemd_unit_file)"
+    else
+      is_enabled='disabled'
+    fi
+    messagize "UNIT is-enabled: ${is_enabled}"
+  else
+    error "Systemd unit-file does not exist: $(get_unit_name)"
+  fi
+}
+
 qystemd_habitastallation() {
   #  debug_func
   local stalling origin_dir destin_dir origin_file destin_file source_postfix target_postfix transition
@@ -175,33 +192,34 @@ qystemd_habitastallation() {
   done
 }
 
-systemctl_command() {
-  debug_func
-  debug "${SYSTEM_CTL}" "$@"
-  ${SYSTEM_CTL} "$@"
-}
-
 #systemctl_command() {
-#  local quiet
-#  quiet=false
-#
-#  is_systemctl_noisy() {
-#    [[ "${quiet}" == 'false' ]]
-#  }
-#
-#  if [[ $1 == '--quiet' ]]; then
-#    shift
-#    quiet=true
-#  fi
-#
 #  debug_func
-#
-#  #  if is_systemctl_noisy; then
 #  debug "${SYSTEM_CTL}" "$@"
-#  #  fi
-#
 #  ${SYSTEM_CTL} "$@"
 #}
+
+systemctl_command() {
+  local quiet
+  quiet=false
+
+  is_systemctl_noisy() {
+    [[ "${quiet}" == 'false' ]]
+  }
+
+  if [[ $1 == '--quiet' ]]; then
+    shift
+    quiet=true
+  fi
+
+  if is_systemctl_noisy; then
+    debug_func
+    debug "${SYSTEM_CTL}" "$@"
+    ${SYSTEM_CTL} "$@"
+  else
+    ${SYSTEM_CTL} "$@" &>/dev/null
+  fi
+
+}
 
 systemd_start_service() {
   systemctl_command start "$(get_unit_name)"
@@ -273,9 +291,10 @@ systemd_disable_unit() {
 }
 
 get_systemd_unit_file() {
-  debug_func
+  #  debug_func
   local name
   name="$1"
+  [[ -n "${name}" ]] || name="$(get_unit_name)"
   local path
 
   #  if txt="$(${SYSTEM_CTL} cat "${name}" 2>/dev/null)"; then
