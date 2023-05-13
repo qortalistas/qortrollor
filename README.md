@@ -133,7 +133,10 @@ The yaml can contain multiple configurations.
 * Because qortrollor allows the installation path to be freely chosen,
   and because systemd requires a fixed path for 'ExecStart', and because systemd has convenient mechanisms
   for using the 'xdg' thingy, qystemd uses the directory ~/config/qotrollor.
-* Whem installing
+* When installing qystemd the service is 'enabled' but not 'started'.
+  * Thus, the node will not start automatically after installation. But it will after a reboot.
+  * You can 'systemd-start' the node with the script 'start_qortrollor_systemd.sh'.
+  * But it is probably wise to first check the settings.yaml. and try start/stop manually at first.
 
 ### Progress:
 
