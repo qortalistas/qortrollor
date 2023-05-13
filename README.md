@@ -137,10 +137,10 @@ The yaml can contain multiple configurations.
     * Thus, the node will not start automatically after installation. But it will after a reboot.
     * You can 'systemd-start' the node with the script 'start_qortrollor_systemd.sh'.
     * But it is probably wise to first check the settings.yaml. and try start/stop manually at first.
-* I just discovere a problem:
-* Systemd-user-services are not started at boot.
-    * Looking into it ...
-    * Something about loginctl enable-linger USERNAME ...
+* I just discovered a problem:
+  * Systemd-user-services are not started at boot.
+      * Looking into it ...
+      * Something about loginctl enable-linger USERNAME ...
 
 ### Progress:
 
