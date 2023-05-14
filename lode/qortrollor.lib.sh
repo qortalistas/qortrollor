@@ -599,9 +599,14 @@ killorize() {
 # endregion startstop
 
 # region pid
+is_pid_file_existing() {
+  [[ -f ${Q_HABITAT_PID_FILENAME} ]]
+}
+
 is_pid_file_valid() {
   local pid
-  [[ -f ${Q_HABITAT_PID_FILENAME} ]] || return 1
+  #  [[ -f ${Q_HABITAT_PID_FILENAME} ]] || return 1
+  is_pid_file_existing || return 1
   pid="$(cat "${Q_HABITAT_PID_FILENAME}")" >/dev/null 2>&1 || return 1
   # is pid a number?:
   if [[ ${pid} =~ ^[0-9]+$ ]]; then
@@ -774,19 +779,33 @@ toggle_install() {
 
 status() {
   debug_func
-  local txt
-  txt="NOT INSTALLED"
-  if is_qortrollor_installed; then
-    txt="INSTALLED"
+
+  if ! is_qortrollor_installed; then
+    messagize "Qortrollor is NOT INSTALLED"
+    exit 1
   fi
-  messagize "Qotrollor is ${txt}"
-  txt="NOT INSTALLED"
+  messagize "Qortrollor is  INSTALLED"
+
   if is_qystemd_installed; then
     messagize "Qystemd is INSTALLED"
     qystemd_status
   else
     messagize "Qystemd is NOT INSTALLED"
   fi
+
+  #  local txt
+  #  txt="NOT INSTALLED"
+  #  if is_qortrollor_installed; then
+  #    txt="INSTALLED"
+  #  fi
+  #  messagize "Qotrollor is ${txt}"
+  #  txt="NOT INSTALLED"
+  #  if is_qystemd_installed; then
+  #    messagize "Qystemd is INSTALLED"
+  #    qystemd_status
+  #  else
+  #    messagize "Qystemd is NOT INSTALLED"
+  #  fi
 }
 # endregion develop
 

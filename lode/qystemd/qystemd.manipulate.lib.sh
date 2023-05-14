@@ -141,19 +141,30 @@ qystemd_stop() {
 
 qystemd_status() {
   debug_func
-  if systemd_exists_unit; then
-    #    messagize "STATUS:"
-    #    systemctl_command status "$(get_unit_name)"
-    if systemctl_command --quiet 'is-enabled' "$(get_unit_name)"; then
-      is_enabled='enabled'
-      messagize "UNIT file: $(get_systemd_unit_file)"
-    else
-      is_enabled='disabled'
-    fi
-    messagize "UNIT is-enabled: ${is_enabled}"
-  else
+
+  if ! systemd_exists_unit; then
     error "Systemd unit-file does not exist: $(get_unit_name)"
+    return 1
   fi
+
+  #    messagize "STATUS:"
+  #    systemctl_command status "$(get_unit_name)"
+  if systemctl_command --quiet 'is-enabled' $(get_unit_name); then
+    is_enabled='enabled'
+    messagize "UNIT file: $(get_systemd_unit_file)"
+  else
+    is_enabled='disabled'
+  fi
+  messagize "UNIT is-enabled: ${is_enabled}"
+
+  if systemctl_command --quiet 'is-active' $(get_unit_name); then
+    is_active='active'
+  else
+    is_active='inactive'
+  fi
+  messagize "UNIT is-active: ${is_active}"
+
+
 }
 
 qystemd_habitastallation() {
