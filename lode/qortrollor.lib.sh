@@ -89,12 +89,21 @@ habitize() {
   if [[ ! ${QORTROL_PREPAROR_JAR_FILE} =~ ^/ ]]; then
     QORTROL_PREPAROR_JAR_FILE="${QORTROL_JARS_DIR}/${QORTROL_PREPAROR_JAR_FILE}"
   fi
+
+  if [[ -z ${QORTROL_JAVA_EXE} ]]; then
+    QORTROL_JAVA_EXE="$(which java)"
+  fi
+
   #  #  if [[ -n ${noisy} ]]; then
   #  debug_vars Q_HABITAT_DIR QORTROL_DIR QORTROL_JARS_DIR \
   #    Q_HABITAT_SETTINGS_DIR QORTROL_PREPAROR_JAR_FILE Q_HABITAT_PID_FILENAME Q_HABITAT_RUNLOG_FILENAME
   #  #  fi
   Q_HABITAT_IZED='true'
   #  modifyze
+}
+
+java_run(){
+  ${QORTROL_JAVA_EXE} "$@"
 }
 
 check_installed_correctly() {
@@ -230,7 +239,7 @@ _substallize() {
     instate_yaml_template
     #### reverse
     cd "${bu_installed_dir}" || fail "Unable to cd ${bu_installed_dir}"
-    java -jar "${QORTROL_PREPAROR_JAR_FILE}" reverse
+    java_run -jar "${QORTROL_PREPAROR_JAR_FILE}" reverse
     origin_file="${bu_installed_dir}/${yaml_settings_file_name}"
     destin_file="${Q_HABITAT_SETTINGS_DIR}/${yaml_settings_file_name}"
     # replace "#placeholder" in ${destin_file} with content of ${origin_file}:
@@ -478,7 +487,7 @@ preparorize() {
   debug_vars Q_HABITAT_SETTINGS_DIR QORTROL_PREPAROR_JAR_FILE
   cd "${Q_HABITAT_SETTINGS_DIR}" || fail "Unable to cd to Q_HABITAT_SETTINGS_DIR: ${Q_HABITAT_SETTINGS_DIR}"
   [[ -f ${QORTROL_PREPAROR_JAR_FILE} ]] || fail "QORTROL_PREPAROR_JAR_FILE not found: ${QORTROL_PREPAROR_JAR_FILE}"
-  java -jar "${QORTROL_PREPAROR_JAR_FILE}"
+  java_run -jar "${QORTROL_PREPAROR_JAR_FILE}"
 }
 
 instate_yaml_template() {
@@ -538,7 +547,7 @@ startorize() {
 
 start_java_args() {
   debug_func
-  nohup nice -n 19 java "$@" 1>"${run_log_filename}" 2>&1 &
+  nohup nice -n 19 "${QORTROL_JAVA_EXE}" "$@" 1>"${run_log_filename}" 2>&1 &
   pid=$!
   echo ${pid} >"${pid_file}"
   echo qortrollor running qortal.jar as pid ${pid}
