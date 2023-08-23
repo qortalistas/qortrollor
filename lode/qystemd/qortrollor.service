@@ -1,13 +1,6 @@
 [Unit]
 Description=Qortrollor Service
 
-#[Service]
-#Type=oneshot
-#EnvironmentFile=%E/qystemd/.env.qystemd
-#PIDFile=$QYSTEMD_PID_FILE
-#ExecStart=%E/qystemd/qystemd_executor.sh start $PIDFile $MAINPID $QYSTEMD_PID_FILE
-#ExecStop=%E/qystemd/qystemd_executor.sh stop $PIDFile $MAINPID $QYSTEMD_PID_FILE
-
 [Service]
 Type=notify
 NotifyAccess=all
@@ -15,37 +8,6 @@ EnvironmentFile=%E/qystemd/qystemd.conf
 ExecStart=%E/qystemd/qystemd_executor.sh start  --mainpid $MAINPID
 ExecStop=%E/qystemd/qystemd_executor.sh stop  --mainpid $MAINPID
 ExecStartPost=%E/qystemd/qystemd_executor.sh start_post  --mainpid $MAINPID
-#PIDFile=$QYSTEMD_PID_FILE
-#ExecStart=%E/qystemd/qystemd_executor.sh start  --mainpid $MAINPID --pidfile $PIDFile
-#ExecStop=%E/qystemd/qystemd_executor.sh stop  --mainpid $MAINPID --pidfile $PIDFile
-##ExecStart=%E/qystemd/qystemd_executor.sh start  'MAINPID=' $MAINPID 'PIDFile=' $PIDFile
-##ExecStart=%E/qystemd/qystemd_executor.sh start  "MAINPID=$MAINPID" 'PIDFile=' $PIDFile
-##ExecStop=%E/qystemd/qystemd_executor.sh stop  'MAINPID=' $MAINPID 'PIDFile=' $PIDFile
-##ExecStop=/opt/optulation/mixed/systemdexecutor/executor.sh stop %I %i $MAINPID
 
 [Install]
 WantedBy=default.target
-
-## path to environment file:
-##File
-#
-#[Service]
-##WorkingDirectory=~
-#
-##EnvironmentFile=-/etc/qystemd/%i.cup.conf
-##Environment=CUP_NAME=%i
-##EnvironmentFile=-%E/qystemd/%i.cup.conf
-##EnvironmentFile=-/home/%u/qystemd/%i.cup.conf
-#Type=oneshot
-#ExecStart=%E/qystemd/%i.cup.sh %i
-##ExecStart=/$CUP_EXE ${CUP_NAME}
-##ExecStart=//opt/projects/hedeninge/qystemd/sh/components/QYSTEMD_cup_exe.sh ${CUP_NAME} %S ${CUP_EXE} %E/qystemd/%i.cup.conf
-#
-#
-## StateDirectory=	/var/lib/	$XDG_CONFIG_HOME	$STATE_DIRECTORY
-#
-##$RUNTIME_DIRECTORY, $STATE_DIRECTORY, $CACHE_DIRECTORY, $LOGS_DIRECTORY, $CONFIGURATION_DIRECTORY
-##Absolute paths to the directories defined with RuntimeDirectory=, StateDirectory=, CacheDirectory=, LogsDirectory=, and ConfigurationDirectory= when those settings are used.
-
-
-
