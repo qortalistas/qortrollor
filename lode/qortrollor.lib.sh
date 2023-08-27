@@ -914,12 +914,48 @@ test_command() {
   debug_func
   debug "test_command: $*"
 }
+# endregion command
 
+# region monitor
 monitor() {
   debug_func "$@"
-}
 
-# endregion command
+  local timestamp last_info counter
+  counter=0
+  #  declare -i new_high high api_height at_height our_height
+  #  high=0
+  #
+  tail -f "${QORTAL_LOG_FILE}" | while read -r line; do
+    timestamp=$(echo "${line}" | grep -oP '\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}')
+    counter=$((counter + 1))
+    #    new_high=$(extract_highest_height "${line}")
+    #    if [[ -n "${new_high}" && ${new_high} -gt ${high} ]]; then
+    #      high="${new_high}"
+    #    fi
+    #    api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
+    #    printf -v info_line "%s high:%s api_height:%s" "${timestamp}" "${high}" "${api_height}"
+    #
+    #    if [[ ${line} =~ at\ height\ ([0-9]+).*our\ height\ ([0-9]+) ]]; then
+    #      at_height="${BASH_REMATCH[1]}"
+    #      our_height="${BASH_REMATCH[2]}"
+    #      printf -v log_line "   at height %s; our height %s" "${at_height}" "${our_height}"
+    #      info_line+="${log_line}"
+    #    fi
+    #
+    #    if [[ ${info_line} == "${last_info}" ]]; then
+    #      continue
+    #    fi
+    #    last_info="${info_line}"
+    #    printf -v output_line "%s %s" "${timestamp}" "${info_line}"
+
+    printf -v info_line "%s" "${counter}"
+    printf -v output_line "%s %s" "${timestamp}" "${info_line}"
+    echo "${output_line}"
+    #    echo "${output_line}" >>"${QORTAL_HEIGHT_LOG_FILE}"
+  done
+
+}
+# endregion monitor
 
 # region init_lib
 init_lib() {
