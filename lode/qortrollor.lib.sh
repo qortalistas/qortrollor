@@ -909,7 +909,7 @@ do_command() {
 
 test_command() {
   debug_func
-  echo "test_command: $*"
+  debug "test_command: $*"
 }
 
 # endregion command
