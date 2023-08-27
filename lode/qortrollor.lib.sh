@@ -963,8 +963,9 @@ monitor_iteration() {
     # Extract "lastHeight" from each peer from variable peers, and list:
     peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
     #    echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight'
+    peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
 
-    info_line+="  api_height: ${api_height}  peers: ${peer_heights}"
+    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
     #    info_line=$(printf -v info_line 'api_height: "%s"  %s' "${api_height}" "${peers}")
 
     #    peers=$(curl -X GET "http://10.6.2.32:12391/peers" -H  "accept: application/json")
