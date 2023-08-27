@@ -962,7 +962,7 @@ monitor_iteration() {
     #    curl -X GET "http://10.6.2.32:12391/peers" -H  "accept: application/json" | jq -r '.[] | select(.height != null) | .height' | sort -n | tail -1
     #    api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
     printf -v info_line 'api_height: "%s"' "${api_height}"
-    printf -v info_line '%s\n%s\n' "${info_line}" "${peers}"
+    printf -v info_line '%s\"n%s"\n' "${info_line}" "${peers}"
   }
 
   api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
