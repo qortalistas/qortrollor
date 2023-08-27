@@ -817,6 +817,102 @@ status() {
 }
 # endregion develop
 
+# region command
+do_command() {
+  debug_func
+  local command
+  command=$1
+  shift
+  case ${command} in
+  'test_command')
+    test_command "$@"
+    ;;
+  'start')
+    prep_start "$@"
+    ;;
+  'stop')
+    stoporize "$@"
+    ;;
+  'status')
+    status "$@"
+    ;;
+  #else respond unknown command:
+  *)
+    fail "Unknown command: ${command}"
+    ;;
+  esac
+
+  #  'install')
+  #    install_modify install "$@"
+  #    ;;
+  #  'uninstall')
+  #    install_modify uninstall "$@"
+  #    ;;
+  #  'develop')
+  #    develop "$@"
+  #    ;;
+  #  'super_modify')
+  #    super_modifyze "$@"
+  #    ;;
+  #  'preparorize')
+  #    preparorize "$@"
+  #    ;;
+  #  'qystemd')
+  #    qystemd "$@"
+  #    ;;
+  #  'qystemd_status')
+  #    qystemd_status "$@"
+  #    ;;
+  #  'qystemd_install')
+  #    qystemd_install "$@"
+  #    ;;
+  #  'qystemd_uninstall')
+  #    qystemd_uninstall "$@"
+  #    ;;
+  #  'qystemd_start')
+  #    qystemd_start "$@"
+  #    ;;
+  #  'qystemd_stop')
+  #    qystemd_stop "$@"
+  #    ;;
+  #  'qystemd_restart')
+  #    qystemd_restart "$@"
+  #    ;;
+  #  'qystemd_reload')
+  #    qystemd_reload "$@"
+  #    ;;
+  #  'qystemd_status')
+  #    qystemd_status "$@"
+  #    ;;
+  #  'qystemd_enable')
+  #    qystemd_enable "$@"
+  #    ;;
+  #  'qystemd_disable')
+  #    qystemd_disable "$@"
+  #    ;;
+  #  'qystemd_is_enabled')
+  #    qystemd_is_enabled "$@"
+  #    ;;
+  #  'qystemd_is_active')
+  #    qystemd_is_active "$@"
+  #    ;;
+  #  'qystemd_is_failed')
+  #    qystemd_is_failed "$@"
+  #    ;;
+  #  'qystemd_is_running')
+  #    qystemd_is_running "$@"
+  #    ;;
+  #  'qystemd_is_dead')
+  #    qystemd_is_dead "$@"
+  #    ;;
+}
+
+test_command() {
+  debug_func
+}
+
+# endregion command
+
 # region init_lib
 init_lib() {
   if [[ $1 == '--habitize' ]]; then

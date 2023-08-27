@@ -2,7 +2,7 @@
 
 execute() {
   load_lib
-  status "$@"
+  do_command "$@"
   #  install_modify 'uninstall'
 }
 
