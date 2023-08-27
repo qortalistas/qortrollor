@@ -12,7 +12,7 @@ load_lib() {
   [[ -f "${lib}" ]] || lib="${operating_dir}/lode/qortrollor.lib.sh"
   [[ -f "${lib}" ]] || lib="${operating_dir}/qortrollor/lode/qortrollor.lib.sh"
   # shellcheck disable=SC1090
-  . "${lib}" '--habitize' '--showcall' || fail "Could not source ${lib}"
+  . "${lib}" '--habitize'  '--noisy' '--showcall' || fail "Could not source ${lib}"
 }
 
 fail() {

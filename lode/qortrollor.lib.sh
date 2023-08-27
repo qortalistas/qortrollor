@@ -102,7 +102,7 @@ habitize() {
   #  modifyze
 }
 
-java_run(){
+java_run() {
   ${QORTROL_JAVA_EXE} "$@"
 }
 
@@ -682,8 +682,7 @@ debug_func() {
 }
 
 _debug() {
-  is_noisy &&
-    print_color '38;5;240' "$*" #dark greyish
+  is_noisy && print_color '38;5;240' "$*" #dark greyish
   #    print_color '1;37' "$*" #greyish
 }
 
