@@ -918,7 +918,29 @@ test_command() {
 # endregion command
 
 # region monitor
+#monitor() {
+#  debug_func "$@"
+#  local counter timestamp
+#  counter=0
+#  #  timestamp=date in this format: <2023-08-23 23:52:13>
+#  # until user aborts for loop printf timestamp and counter every 1 second:
+#
+#}
+
 monitor() {
+  debug_func "$@"
+  declare -i counter
+  counter=0
+  local timestamp
+  timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+  while true; do
+    printf "%s %d\n" "$timestamp" "$counter"
+    sleep 1
+    counter=$((counter + 1))
+  done
+}
+
+monitor_by_logfile() {
   debug_func "$@"
   local timestamp last_info counter
   counter=0
