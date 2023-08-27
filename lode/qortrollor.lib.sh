@@ -934,29 +934,24 @@ monitor() {
   local timestamp info_line
   timestamp=$(date +"%Y-%m-%d %H:%M:%S")
   monitor_loop
-#  while true; do
-#    counter=$((counter + 1))
-#    timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-#    printf -v info_line "%s" 'blah'
-#    #    printf "%s %04d\n" "$timestamp" "$counter"
-#    #    printf "%s %04d\n" "$timestamp" "$counter"
-#    printf -v output_line "%s %04d %s" "${timestamp}" "${counter}" "${info_line}"
-#    echo "${output_line}"
-#    sleep 1
-#  done
 }
 
 monitor_loop() {
   while true; do
     counter=$((counter + 1))
     timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-    printf -v info_line "%s" 'blah'
-    #    printf "%s %04d\n" "$timestamp" "$counter"
-    #    printf "%s %04d\n" "$timestamp" "$counter"
+    monitor_iteration
+    #    printf -v info_line "%s" 'blah'
+    #    #    printf "%s %04d\n" "$timestamp" "$counter"
+    #    #    printf "%s %04d\n" "$timestamp" "$counter"
     printf -v output_line "%s %04d %s" "${timestamp}" "${counter}" "${info_line}"
     echo "${output_line}"
     sleep 1
   done
+}
+
+monitor_iteration() {
+  printf -v info_line "%s" 'iteration'
 }
 
 monitor_by_logfile() {
