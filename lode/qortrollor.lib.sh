@@ -934,10 +934,11 @@ monitor() {
   local timestamp
   timestamp=$(date +"%Y-%m-%d %H:%M:%S")
   while true; do
-    #    printf "%s %04d\n" "$timestamp" "$counter"
-    printf "%s %-4d\n" "$timestamp" "$counter"
-    sleep 1
     counter=$((counter + 1))
+    timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+    printf "%s %04d\n" "$timestamp" "$counter"
+
+    sleep 1
   done
 }
 
