@@ -960,27 +960,42 @@ monitor_iteration() {
     local api_height peers
     api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
     peers=$(curl -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json")
-    # Extract "lastHeight" from each peer from variable peers, and list:
     peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
-    #    echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight'
     peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
-
-    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
-    #    info_line=$(printf -v info_line 'api_height: "%s"  %s' "${api_height}" "${peers}")
-
-    #    peers=$(curl -X GET "http://10.6.2.32:12391/peers" -H  "accept: application/json")
-    #    curl -X GET "http://10.6.2.32:12391/peers" -H  "accept: application/json" | jq -r '.[] | select(.height != null) | .height' | sort -n | tail -1
-    #    api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
-    #    printf -v info_line 'api_height: "%s"  %s' "${api_height}" "${peers}"
-    #    printf -v info_line 'api_height: "%s"' "${api_height}"
-    #    printf -v info_line '%s\n peers:"%s"\n' "${info_line}" "${peers}"
+    info_line+="  api_height: ${api_height}  peer_heights: ${peer_heights}"
+#    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
   }
 
   api_get_higehst_peer_height
-
-  #  api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
-  #  printf -v info_line 'api_height: "%s"' "${api_height}"
 }
+
+
+#monitor_iteration() {
+#  api_get_higehst_peer_height() {
+#    local api_height peers
+#    api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
+#    peers=$(curl -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json")
+#    # Extract "lastHeight" from each peer from variable peers, and list:
+#    peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
+#    #    echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight'
+#    peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
+#
+#    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
+#    #    info_line=$(printf -v info_line 'api_height: "%s"  %s' "${api_height}" "${peers}")
+#
+#    #    peers=$(curl -X GET "http://10.6.2.32:12391/peers" -H  "accept: application/json")
+#    #    curl -X GET "http://10.6.2.32:12391/peers" -H  "accept: application/json" | jq -r '.[] | select(.height != null) | .height' | sort -n | tail -1
+#    #    api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
+#    #    printf -v info_line 'api_height: "%s"  %s' "${api_height}" "${peers}"
+#    #    printf -v info_line 'api_height: "%s"' "${api_height}"
+#    #    printf -v info_line '%s\n peers:"%s"\n' "${info_line}" "${peers}"
+#  }
+#
+#  api_get_higehst_peer_height
+#
+#  #  api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
+#  #  printf -v info_line 'api_height: "%s"' "${api_height}"
+#}
 
 monitor_by_logfile() {
   debug_func "$@"
