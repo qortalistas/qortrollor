@@ -827,6 +827,9 @@ do_command() {
   'test_command')
     test_command "$@"
     ;;
+  'monitor')
+    monitor "$@"
+    ;;
   'start')
     prep_start "$@"
     ;;
@@ -910,6 +913,10 @@ do_command() {
 test_command() {
   debug_func
   debug "test_command: $*"
+}
+
+monitor() {
+  debug_func "$@"
 }
 
 # endregion command
