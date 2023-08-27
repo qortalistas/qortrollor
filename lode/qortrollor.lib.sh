@@ -933,6 +933,10 @@ monitor() {
   counter=0
   local timestamp info_line
   timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+  QORTAL_API_IP='10.6.2.31'
+  QORTAL_API_PORT='12391'
+  QORTAL_API_BASE_URL="http://${QORTAL_API_IP}:${QORTAL_API_PORT}"
+  #  QORTAL_API_BASE_URL='http://10.6.2.31:12391'
   monitor_loop
 }
 
@@ -951,7 +955,8 @@ monitor_loop() {
 }
 
 monitor_iteration() {
-  printf -v info_line "%s" 'iteration'
+  api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
+  printf -v info_line 'api_height: "%s"' "${api_height}"
 }
 
 monitor_by_logfile() {
