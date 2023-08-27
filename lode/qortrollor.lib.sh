@@ -939,12 +939,11 @@ monitor() {
     printf -v info_line "%s" 'blah'
     #    printf "%s %04d\n" "$timestamp" "$counter"
     #    printf "%s %04d\n" "$timestamp" "$counter"
+    printf -v output_line "%s %04d %s" "${timestamp}" "${counter}" "${info_line}"
+    echo "${output_line}"
 
     sleep 1
   done
-
-  printf -v output_line "%s %04d %s" "${timestamp}" "${counter}" "${info_line}"
-  echo "${output_line}"
 
 }
 
