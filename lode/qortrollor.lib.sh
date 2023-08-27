@@ -944,7 +944,8 @@ monitor_loop() {
   while true; do
     counter=$((counter + 1))
     timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-    printf -v info_line "%s" 'blah'
+    #    printf -v info_line "%s" 'blah'
+    info_line=''
     monitor_iteration
     #    printf -v info_line "%s" 'blah'
     #    #    printf "%s %04d\n" "$timestamp" "$counter"
@@ -957,14 +958,18 @@ monitor_loop() {
 
 monitor_iteration() {
   api_get_higehst_peer_height() {
-    local api_height peers
+    local peers peer_heights
+    declare -i api_height peer_highest diff
     api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
     peers=$(curl -s -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json")
     peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
     #    peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
     peer_highest=$(echo "${peer_heights}" | sort -n | tail -1)
+    diff=$((peer_highest - api_height))
+
     #    info_line+="  api_height: ${api_height}  peer_heights: ${peer_heights}"
-    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
+    #    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
+    info_line+="  self: ${api_height}  high: ${peer_highest}  diff: ${diff}"
   }
 
   api_get_higehst_peer_height
