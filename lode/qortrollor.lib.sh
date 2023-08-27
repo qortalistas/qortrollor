@@ -931,15 +931,21 @@ monitor() {
   debug_func "$@"
   declare -i counter
   counter=0
-  local timestamp
+  local timestamp info_line
   timestamp=$(date +"%Y-%m-%d %H:%M:%S")
   while true; do
     counter=$((counter + 1))
     timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-    printf "%s %04d\n" "$timestamp" "$counter"
+    printf -v info_line "%s" 'blah'
+    #    printf "%s %04d\n" "$timestamp" "$counter"
+    #    printf "%s %04d\n" "$timestamp" "$counter"
 
     sleep 1
   done
+
+  printf -v output_line "%s %04d %s" "${timestamp}" "${counter}" "${info_line}"
+  echo "${output_line}"
+
 }
 
 monitor_by_logfile() {
