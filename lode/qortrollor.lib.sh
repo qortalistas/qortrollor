@@ -941,6 +941,7 @@ monitor() {
 }
 
 monitor_loop() {
+  local last_info output_line
   while true; do
     counter=$((counter + 1))
     timestamp=$(date +"%Y-%m-%d %H:%M:%S")
@@ -950,8 +951,14 @@ monitor_loop() {
     #    printf -v info_line "%s" 'blah'
     #    #    printf "%s %04d\n" "$timestamp" "$counter"
     #    #    printf "%s %04d\n" "$timestamp" "$counter"
-    printf -v output_line "%s %04d %s" "${timestamp}" "${counter}" "${info_line}"
-    echo "${output_line}"
+    if [[ ${info_line} != "${last_info}" ]]; then
+      printf -v output_line "%s %04d %s" "${timestamp}" "${counter}" "${info_line}"
+      echo "${output_line}"
+      last_info="${info_line}"
+    fi
+    #    printf -v output_line "%s %04d %s" "${timestamp}" "${counter}" "${info_line}"
+    #    echo "${output_line}"
+    #    last_info="${info_line}"
     sleep 1
   done
 }
