@@ -959,16 +959,15 @@ monitor_iteration() {
   api_get_higehst_peer_height() {
     local api_height peers
     api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
-    peers=$(curl -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json")
+    peers=$(curl -s -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json")
     peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
-    peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
+    #    peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
     info_line+="  api_height: ${api_height}  peer_heights: ${peer_heights}"
-#    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
+    #    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
   }
 
   api_get_higehst_peer_height
 }
-
 
 #monitor_iteration() {
 #  api_get_higehst_peer_height() {
