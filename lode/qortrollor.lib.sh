@@ -678,7 +678,7 @@ debug_vars() {
 
 debug_func() {
   is_noisy &&
-    print_color '34' "FUNC ${FUNCNAME[1]}" #blue
+    print_color '34' "FUNC ${FUNCNAME[1]}" "$@" #blue
 }
 
 _debug() {
