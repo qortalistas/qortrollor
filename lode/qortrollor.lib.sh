@@ -66,8 +66,9 @@ habitize() {
   Q_HABITAT_SETTINGS_DIR="${Q_HABITAT_SETTINGS_DIR:-"${Q_HABITAT_DIR}"}"
   Q_HABITAT_PID_FILENAME='run.pid'
   Q_HABITAT_RUNLOG_FILENAME='run.log'
+  Q_HABITAT_LOG_DIR="${Q_HABITAT_DIR}/log"
   QORTROLLED_DIR="${Q_HABITAT_DIR}/_qortrolled"
-  QORTROLLED_LOG_DIR="${QORTROLLED_DIR}/log"
+  #  QORTROLLED_LOG_DIR="${QORTROLLED_DIR}/log"
 
   ####  check_installed_correctly
   qortal_jar_file="${Q_HABITAT_DIR}/qortal.jar"
@@ -919,9 +920,14 @@ test_command() {
 # region monitor
 monitor() {
   debug_func "$@"
-
   local timestamp last_info counter
   counter=0
+
+  QORTAL_LOG_FILE="${Q_HABITAT_LOG_DIR}/qortal.log"
+  #  QORTAL_HEIGHT_LOG_FILE='log/height.log'
+  #  QORTAL_API_BASE_URL='http://10.6.2.31:12391'
+  #  #QORTAL_API_BASE_URL='http://127.0.0.1:12391'
+
   #  declare -i new_high high api_height at_height our_height
   #  high=0
   #
