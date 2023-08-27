@@ -962,7 +962,7 @@ monitor_iteration() {
     peers=$(curl -s -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json")
     peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
     #    peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
-    peer_highest=$(echo "peer_heights" | sort -n | tail -1)
+    peer_highest=$(echo "${peer_heights}" | sort -n | tail -1)
     #    info_line+="  api_height: ${api_height}  peer_heights: ${peer_heights}"
     info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
   }
