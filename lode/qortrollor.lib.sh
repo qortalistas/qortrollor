@@ -945,7 +945,6 @@ monitor() {
   monitor_loop
 }
 
-
 dotseparatize() {
   num=$1
   decimal_separator=$(locale decimal_point)
@@ -983,12 +982,27 @@ monitor_loop() {
   done
 }
 
+#fect_api_height() {
+#  if api_height=$(curl -s -f "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height'); then
+#    echo "${api_height}"
+#  else
+#    echo '-1'
+#  fi
+#}
+
 monitor_iteration() {
   api_get_higehst_peer_height() {
     local peers peer_heights
     declare -i api_height peer_new_high diff peer_high_progress
-    api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
-    peers=$(curl -s -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json")
+    if ! api_height=$(curl -s -f "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height'); then
+      echo 'curl api_height FAILED'
+      return 1
+    fi
+    if ! peers=$(curl -s -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json"); then
+      echo 'curl peers FAILED'
+      return 1
+    fi
+
     peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
     peer_new_high=$(echo "${peer_heights}" | sort -n | tail -1)
 
