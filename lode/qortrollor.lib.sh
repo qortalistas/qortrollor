@@ -993,13 +993,14 @@ monitor_loop() {
 monitor_iteration() {
   api_get_higehst_peer_height() {
     local peers peer_heights
-    declare -i api_height peer_new_high diff peer_high_progress peer_count
+    declare -i api_height peer_new_high diff peer_high_progress peer_count api_sync_percent
     if ! status=$(curl -s -f "${QORTAL_API_BASE_URL}/admin/status"); then
       echo 'curl status FAILED'
       return 1
     fi
     #    api_height=$(curl -s -f "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
     api_height=$(echo "${status}" | jq -r '.height')
+    api_sync_percent=$(echo "${status}" | jq -r '.syncPercent')
     if ! peers=$(curl -f -s -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json"); then
       echo 'curl peers FAILED'
       return 1
@@ -1033,17 +1034,17 @@ monitor_iteration() {
     data_line="${api_height}_${peer_high}" # ,${diff} _${peer_count}
 
     declare -a arguments=("${info_line}"
-      "${peer_count}" "${api_height}" "${peer_high}"
+      "${peer_count}" "${api_sync_percent}" "${api_height}" "${peer_high}"
       "${height_progress}"
     )
     #    printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' "${arguments[@]}"
 
     if [[ ${height_progress} -gt 0 ]]; then
-      printf -v info_line '%s peers: %02d heights: %s/%s  prog: \033[32m+%s\033[0m' "${arguments[@]}"
+      printf -v info_line '%s peers: %02d %02d\% heights: %s/%s  prog: \033[32m+%s\033[0m' "${arguments[@]}"
     elif [[ ${height_progress} -lt 0 ]]; then
-      printf -v info_line '%s peers: %02d heights: %s/%s  prog: \033[31m%s\033[0m' "${arguments[@]}"
+      printf -v info_line '%s peers: %02d %02d\%  heights: %s/%s  prog: \033[31m%s\033[0m' "${arguments[@]}"
     else
-      printf -v info_line '%s peers: %02d heights: %s/%s  prog:  %s' "${arguments[@]}"
+      printf -v info_line '%s peers: %02d %02d\%  heights: %s/%s  prog:  %s' "${arguments[@]}"
     fi
 
     if [[ ${peer_high_progress} -gt 0 ]]; then
