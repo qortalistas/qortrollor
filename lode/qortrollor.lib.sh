@@ -926,6 +926,19 @@ test_command() {
 # endregion command
 
 # region monitor
+#dotseparatize() {
+#  num=$1
+#  decimal_separator=$(locale decimal_point)
+#  num_dot=${num//./$decimal_separator}
+#  printf '%s' "${num_dot}"
+#}
+
+decimalize() {
+  num=$1
+  decimal_separator=$(locale decimal_point)
+  num_dot=${num//./$decimal_separator}
+  printf '%.1f' "${num_dot}"
+}
 
 monitor() {
   debug_func "$@"
@@ -938,25 +951,14 @@ monitor() {
   last_data_line=''
   local timestamp #info_line
   timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-  QORTAL_API_IP='10.6.2.32'
+  #  QORTAL_API_IP='10.6.2.32'
+  #  QORTAL_API_IP='localhost'
+  QORTAL_API_IP="${QORTAL_API_IP:-localhost}"
+  messagize_noisy "QORTAL_API_IP: ${QORTAL_API_IP}"
   QORTAL_API_PORT='12391'
   QORTAL_API_BASE_URL="http://${QORTAL_API_IP}:${QORTAL_API_PORT}"
   #  QORTAL_API_BASE_URL='http://10.6.2.31:12391'
   monitor_loop
-}
-
-dotseparatize() {
-  num=$1
-  decimal_separator=$(locale decimal_point)
-  num_dot=${num//./$decimal_separator}
-  printf '%s' "${num_dot}"
-}
-
-decimalize() {
-  num=$1
-  decimal_separator=$(locale decimal_point)
-  num_dot=${num//./$decimal_separator}
-  printf '%.1f' "${num_dot}"
 }
 
 monitor_loop() {
