@@ -998,7 +998,7 @@ monitor_iteration() {
     peer_new_high=$(echo "${peer_heights}" | sort -n | tail -1)
 
     if [[ ${last_height} -lt 0 ]]; then
-      messagize_noisy "first time"
+      #      messagize_noisy "first time"
       last_height=api_height
       peer_high=${peer_new_high}
     fi
@@ -1018,12 +1018,12 @@ monitor_iteration() {
     #    info_line+="  self: ${api_height}  high: ${peer_high}  diff: ${diff}  prog: ${height_progress}/${peer_high_progress}"
     #    printf -v info_line '%s self: %s  high: %s  diff: %s  prog: %s/%s'  "${info_line}" "${api_height}" "${peer_high}" "${diff}" "${height_progress}" "${peer_high_progress}"
 
-    height_progress_aligned="${height_progress}"
-    if [[ ${height_progress} -gt 0 ]]; then
-      height_progress_aligned="+${height_progress}"
-    elif [[ ${height_progress} == 0 ]]; then
-      height_progress=" ${height_progress}"
-    fi
+#    height_progress_aligned="${height_progress}"
+#    if [[ ${height_progress} -gt 0 ]]; then
+#      height_progress_aligned="+${height_progress}"
+#    elif [[ ${height_progress} == 0 ]]; then
+#      height_progress=" ${height_progress}"
+#    fi
 
     #    height_progress_aligned="${height_progress}"
     #    if [[ ${height_progress} -gt 0 ]]; then
@@ -1043,7 +1043,15 @@ monitor_iteration() {
       "${api_height}" "${peer_high}"
       "${height_progress}" "${peer_high_progress}" "${diff}"
     )
-    printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' "${arguments[@]}"
+    #    printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' "${arguments[@]}"
+
+    if [[ ${height_progress} -gt 0 ]]; then
+      printf -v info_line '%s heights: %s/%s  prog: \033[32m+%s\033[0m/%s  diff: %s' "${arguments[@]}"
+    elif [[ ${height_progress} -lt 0 ]]; then
+      printf -v info_line '%s heights: %s/%s  prog: \033[31m+%s\033[0m/%s  diff: %s' "${arguments[@]}"
+    else
+      printf -v info_line '%s heights: %s/%s  prog:  %s/%s  diff: %s' "${arguments[@]}"
+    fi
 
   }
 
