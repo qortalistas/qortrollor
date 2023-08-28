@@ -938,7 +938,7 @@ monitor() {
   last_data_line=''
   local timestamp #info_line
   timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-  QORTAL_API_IP='10.6.2.31'
+  QORTAL_API_IP='10.6.2.32'
   QORTAL_API_PORT='12391'
   QORTAL_API_BASE_URL="http://${QORTAL_API_IP}:${QORTAL_API_PORT}"
   #  QORTAL_API_BASE_URL='http://10.6.2.31:12391'
