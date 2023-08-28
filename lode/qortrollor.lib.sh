@@ -945,7 +945,7 @@ monitor() {
 }
 
 monitor_loop() {
-  local last_info output_line last_nano_time cur_nano_time elapsed_time elap_sec
+  local data_line last_info output_line last_nano_time cur_nano_time elapsed_time elap_sec
   last_nano_time=$(get_nano_time)
   while true; do
     counter=$((counter + 1))
