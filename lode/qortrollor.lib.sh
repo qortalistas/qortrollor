@@ -941,10 +941,16 @@ monitor() {
 }
 
 monitor_loop() {
-  local last_info output_line
+  local last_info output_line last_nano_time cur_nano_time elapsed_time elap_sec
+  last_nano_time=$(get_nano_time)
   while true; do
     counter=$((counter + 1))
     timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+    cur_nano_time=$(get_nano_time)
+    elapsed_time=$(echo "${cur_nano_time} - ${last_nano_time}" | bc -l) # Calculate elapsed time
+    elap_sec=$(printf "%.1f" "${elapsed_time}")             # Format with one decimal place
+    last_nano_time=${cur_nano_time}
+
     #    printf -v info_line "%s" 'blah'
     info_line=''
     monitor_iteration
@@ -952,7 +958,7 @@ monitor_loop() {
     #    #    printf "%s %04d\n" "$timestamp" "$counter"
     #    #    printf "%s %04d\n" "$timestamp" "$counter"
     if [[ ${info_line} != "${last_info}" ]]; then
-      printf -v output_line "%s %04d %s" "${timestamp}" "${counter}" "${info_line}"
+      printf -v output_line "%s %04d %s %s" "${timestamp}" "${counter}" "${elap_sec}" "${info_line}"
       echo "${output_line}"
       last_info="${info_line}"
     fi
@@ -961,6 +967,12 @@ monitor_loop() {
     #    last_info="${info_line}"
     sleep 1
   done
+}
+
+get_nano_time() {
+  local nano_time
+  nano_time=$(date +%s.%N)
+  echo "${nano_time}"
 }
 
 monitor_iteration() {
