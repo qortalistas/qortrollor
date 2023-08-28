@@ -949,8 +949,7 @@ monitor_loop() {
     cur_nano_time=$(get_nano_time)
     #    elapsed_time=$(echo "${cur_nano_time} - ${last_nano_time}" | bc -l) # Calculate elapsed time
     elapsed_time=$(awk "BEGIN { print ${cur_nano_time} - ${last_nano_time} }") # Calculate elapsed time
-    elap_sec=$(printf "%.1f" "${elapsed_time}")                   # Format with one decimal place
-    last_nano_time=${cur_nano_time}
+    elap_sec=$(printf "%.1f" "${elapsed_time}")                                # Format with one decimal place
 
     #    printf -v info_line "%s" 'blah'
     info_line=''
@@ -962,6 +961,7 @@ monitor_loop() {
       printf -v output_line "%s %04d %s %s" "${timestamp}" "${counter}" "${elap_sec}" "${info_line}"
       echo "${output_line}"
       last_info="${info_line}"
+      last_nano_time=${cur_nano_time}
     fi
     #    printf -v output_line "%s %04d %s" "${timestamp}" "${counter}" "${info_line}"
     #    echo "${output_line}"
