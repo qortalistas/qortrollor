@@ -929,8 +929,9 @@ test_command() {
 
 monitor() {
   debug_func "$@"
-  declare -i counter
+  declare -i counter last_height
   counter=0
+  last_height=0
   local timestamp #info_line
   timestamp=$(date +"%Y-%m-%d %H:%M:%S")
   QORTAL_API_IP='10.6.2.31'
@@ -992,10 +993,12 @@ monitor_iteration() {
     #    peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
     peer_highest=$(echo "${peer_heights}" | sort -n | tail -1)
     diff=$((peer_highest - api_height))
+    height_progress=$((api_height - last_height))
+    last_height=${api_height}
 
     #    info_line+="  api_height: ${api_height}  peer_heights: ${peer_heights}"
     #    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
-    info_line+="  self: ${api_height}  high: ${peer_highest}  diff: ${diff}"
+    info_line+="  self: ${api_height}  high: ${peer_highest}  diff: ${diff}  prog: ${height_progress}"
   }
 
   api_get_higehst_peer_height
