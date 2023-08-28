@@ -1017,6 +1017,11 @@ monitor_iteration() {
     data_line="${api_height}_${peer_high}" # ,${diff}
     #    info_line+="  self: ${api_height}  high: ${peer_high}  diff: ${diff}  prog: ${height_progress}/${peer_high_progress}"
     #    printf -v info_line '%s self: %s  high: %s  diff: %s  prog: %s/%s'  "${info_line}" "${api_height}" "${peer_high}" "${diff}" "${height_progress}" "${peer_high_progress}"
+
+    if [[ ${height_progress} -gt 0 ]]; then
+      height_progress="+${height_progress}"
+    fi
+
     printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' \
       "${info_line}" "${api_height}" "${peer_high}" \
       "${height_progress}" "${peer_high_progress}" "${diff}"
