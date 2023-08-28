@@ -1034,17 +1034,17 @@ monitor_iteration() {
     data_line="${api_height}_${peer_high}" # ,${diff} _${peer_count}
 
     declare -a arguments=("${info_line}"
-      "${peer_count}" "${api_sync_percent}" "${api_height}" "${peer_high}"
+      "${peer_count}" "${api_sync_percent}%" "${api_height}" "${peer_high}"
       "${height_progress}"
     )
     #    printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' "${arguments[@]}"
 
     if [[ ${height_progress} -gt 0 ]]; then
-      printf -v info_line '%s peers: %02d %02d\% heights: %s/%s  prog: \033[32m+%s\033[0m' "${arguments[@]}"
+      printf -v info_line '%s peers: %02d %03d  heights: %s/%s  prog: \033[32m+%s\033[0m' "${arguments[@]}"
     elif [[ ${height_progress} -lt 0 ]]; then
-      printf -v info_line '%s peers: %02d %02d\%  heights: %s/%s  prog: \033[31m%s\033[0m' "${arguments[@]}"
+      printf -v info_line '%s peers: %02d %03d  heights: %s/%s  prog: \033[31m%s\033[0m' "${arguments[@]}"
     else
-      printf -v info_line '%s peers: %02d %02d\%  heights: %s/%s  prog:  %s' "${arguments[@]}"
+      printf -v info_line '%s peers: %02d %03d  heights: %s/%s  prog:  %s' "${arguments[@]}"
     fi
 
     if [[ ${peer_high_progress} -gt 0 ]]; then
