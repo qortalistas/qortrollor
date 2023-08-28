@@ -1048,7 +1048,7 @@ monitor_iteration() {
     if [[ ${height_progress} -gt 0 ]]; then
       printf -v info_line '%s heights: %s/%s  prog: \033[32m+%s\033[0m/%s  diff: %s' "${arguments[@]}"
     elif [[ ${height_progress} -lt 0 ]]; then
-      printf -v info_line '%s heights: %s/%s  prog: \033[31m+%s\033[0m/%s  diff: %s' "${arguments[@]}"
+      printf -v info_line '%s heights: %s/%s  prog: \033[31m%s\033[0m/%s  diff: %s' "${arguments[@]}"
     else
       printf -v info_line '%s heights: %s/%s  prog:  %s/%s  diff: %s' "${arguments[@]}"
     fi
