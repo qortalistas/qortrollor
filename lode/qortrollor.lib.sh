@@ -1045,16 +1045,22 @@ monitor_iteration() {
 
     declare -a arguments=("${info_line}"
       "${api_height}" "${peer_high}"
-      "${height_progress}" "${peer_high_progress}"
+      "${height_progress}"
     )
     #    printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' "${arguments[@]}"
 
     if [[ ${height_progress} -gt 0 ]]; then
-      printf -v info_line '%s heights: %s/%s  prog: \033[32m+%s\033[0m/%s' "${arguments[@]}"
+      printf -v info_line '%s heights: %s/%s  prog: \033[32m+%s\033[0m' "${arguments[@]}"
     elif [[ ${height_progress} -lt 0 ]]; then
-      printf -v info_line '%s heights: %s/%s  prog: \033[31m%s\033[0m/%s' "${arguments[@]}"
+      printf -v info_line '%s heights: %s/%s  prog: \033[31m%s\033[0m' "${arguments[@]}"
     else
-      printf -v info_line '%s heights: %s/%s  prog:  %s/%s' "${arguments[@]}"
+      printf -v info_line '%s heights: %s/%s  prog:  %s' "${arguments[@]}"
+    fi
+
+    if [[ ${peer_high_progress} -gt 0 ]]; then
+      printf -v info_line '%s/\033[34m%s\033[0m' "${info_line}" "${peer_high_progress}"
+    else
+      printf -v info_line '%s/%s' "${info_line}" "${peer_high_progress}"
     fi
 
     if [[ ${diff_progress} -gt 0 ]]; then
