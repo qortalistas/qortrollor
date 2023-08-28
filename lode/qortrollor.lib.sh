@@ -929,9 +929,10 @@ test_command() {
 
 monitor() {
   debug_func "$@"
-  declare -i counter last_height
+  declare -i counter last_height last_data_line
   counter=0
   last_height=0
+  last_data_line=''
   local timestamp #info_line
   timestamp=$(date +"%Y-%m-%d %H:%M:%S")
   QORTAL_API_IP='10.6.2.31'
@@ -964,10 +965,12 @@ monitor_loop() {
     #    printf -v info_line "%s" 'blah'
     #    #    printf "%s %04d\n" "$timestamp" "$counter"
     #    #    printf "%s %04d\n" "$timestamp" "$counter"
-    if [[ ${info_line} != "${last_info}" ]]; then
+#    if [[ ${info_line} != "${last_info}" ]]; then
+    if [[ ${data_line} != "${last_data_line}" ]]; then
       printf -v output_line "%s %04d %s %s" "${timestamp}" "${counter}" "${elap_sec}" "${info_line}"
       echo "${output_line}"
       last_info="${info_line}"
+      last_data_line="${data_line}"
       last_nano_time=${cur_nano_time}
     fi
     #    printf -v output_line "%s %04d %s" "${timestamp}" "${counter}" "${info_line}"
@@ -998,6 +1001,7 @@ monitor_iteration() {
 
     #    info_line+="  api_height: ${api_height}  peer_heights: ${peer_heights}"
     #    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
+    data_line+="${api_height};${peer_highest};${diff}"
     info_line+="  self: ${api_height}  high: ${peer_highest}  diff: ${diff}  prog: ${height_progress}"
   }
 
