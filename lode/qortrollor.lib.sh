@@ -1016,7 +1016,7 @@ monitor_iteration() {
     #    info_line+="  api_height: ${api_height}  peer_heights: ${peer_heights}"
     #    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
     data_line="${api_height},${peer_highest}" # ,${diff}
-    info_line+="  self: ${api_height}  high: ${peer_highest}  diff: ${diff}/${peer_highest_diff}  prog: ${height_progress}"
+    info_line+="  self: ${api_height}  high: ${peer_highest}  diff: ${diff}  prog: ${height_progress}/${peer_highest_diff}"
   }
 
   api_get_higehst_peer_height
