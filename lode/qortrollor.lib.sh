@@ -999,7 +999,7 @@ monitor_iteration() {
     peer_new_highest=$(echo "${peer_heights}" | sort -n | tail -1)
 
     if [[ ${last_height} -lt 0 ]]; then
-      noisy "first time"
+      messagize_noisy "first time"
       last_height=api_height
       peer_high=${peer_new_highest}
     fi
