@@ -955,7 +955,7 @@ monitor_loop() {
     elapsed_time=$(awk "BEGIN { print ${cur_nano_time} - ${last_nano_time} }") # Calculate elapsed time
     elap_sec=$(printf "%02.1f" "${elapsed_time}")                              # Format with one decimal place
 
-    local elapsed_seconds zero_padded_seconds formatted_elapsed_time
+    local elapsed_seconds zero_padded_seconds
     elapsed_seconds=$(printf "%.1f" "$elapsed_time")               # Format with one decimal place
     seconds_before_decimal=${elapsed_seconds%.*}                   # Extract seconds before decimal
     zero_padded_seconds=$(printf "%02d" "$seconds_before_decimal") # Zero-pad
@@ -991,7 +991,7 @@ get_nano_time() {
 monitor_iteration() {
   api_get_higehst_peer_height() {
     local peers peer_heights
-    declare -i api_height peer_highest diff
+    declare -i api_height peer_new_highest diff
     api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
     peers=$(curl -s -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json")
     peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
