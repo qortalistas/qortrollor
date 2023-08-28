@@ -930,9 +930,9 @@ test_command() {
 monitor() {
   debug_func "$@"
   local last_data_line
-  declare -i counter last_height peer_highest
+  declare -i counter last_height peer_high
   counter=0
-  peer_highest=0
+  peer_high=0
   last_height=-1
   last_data_line=''
   local timestamp #info_line
@@ -991,35 +991,36 @@ get_nano_time() {
 monitor_iteration() {
   api_get_higehst_peer_height() {
     local peers peer_heights
-    declare -i api_height peer_new_highest diff peer_highest_diff
+    declare -i api_height peer_new_highest diff peer_high_progress
     api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
     peers=$(curl -s -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json")
     peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
-    #    peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
+    #    peer_high=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
     peer_new_highest=$(echo "${peer_heights}" | sort -n | tail -1)
 
     if [[ ${last_height} -lt 0 ]]; then
+      noisy "first time"
       last_height=api_height
-      peer_highest=${peer_new_highest}
+      peer_high=${peer_new_highest}
     fi
-    diff=$((peer_highest - api_height))
+    diff=$((peer_high - api_height))
     height_progress=$((api_height - last_height))
     last_height=${api_height}
 
-    peer_highest_diff=0
-    if [[ ${peer_new_highest} -gt ${peer_highest} ]]; then
-      peer_highest_diff=$((peer_new_highest - peer_highest))
-      peer_highest=${peer_new_highest}
+    peer_high_progress=0
+    if [[ ${peer_new_highest} -gt ${peer_high} ]]; then
+      peer_high_progress=$((peer_new_highest - peer_high))
+      peer_high=${peer_new_highest}
     fi
 
     #    info_line+="  api_height: ${api_height}  peer_heights: ${peer_heights}"
-    #    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
-    data_line="${api_height},${peer_highest}" # ,${diff}
-    #    info_line+="  self: ${api_height}  high: ${peer_highest}  diff: ${diff}  prog: ${height_progress}/${peer_highest_diff}"
-    #    printf -v info_line '%s self: %s  high: %s  diff: %s  prog: %s/%s'  "${info_line}" "${api_height}" "${peer_highest}" "${diff}" "${height_progress}" "${peer_highest_diff}"
+    #    info_line+="  api_height: ${api_height}  peer_high: ${peer_high}"
+    data_line="${api_height},${peer_high}" # ,${diff}
+    #    info_line+="  self: ${api_height}  high: ${peer_high}  diff: ${diff}  prog: ${height_progress}/${peer_high_progress}"
+    #    printf -v info_line '%s self: %s  high: %s  diff: %s  prog: %s/%s'  "${info_line}" "${api_height}" "${peer_high}" "${diff}" "${height_progress}" "${peer_high_progress}"
     printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' \
-      "${info_line}" "${api_height}" "${peer_highest}" \
-      "${height_progress}" "${peer_highest_diff}" "${diff}"
+      "${info_line}" "${api_height}" "${peer_high}" \
+      "${height_progress}" "${peer_high_progress}" "${diff}"
   }
 
   api_get_higehst_peer_height
@@ -1033,9 +1034,9 @@ monitor_iteration() {
 #    # Extract "lastHeight" from each peer from variable peers, and list:
 #    peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
 #    #    echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight'
-#    peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
+#    peer_high=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
 #
-#    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
+#    info_line+="  api_height: ${api_height}  peer_high: ${peer_high}"
 #    #    info_line=$(printf -v info_line 'api_height: "%s"  %s' "${api_height}" "${peers}")
 #
 #    #    peers=$(curl -X GET "http://10.6.2.32:12391/peers" -H  "accept: application/json")
