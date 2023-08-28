@@ -929,7 +929,8 @@ test_command() {
 
 monitor() {
   debug_func "$@"
-  declare -i counter last_height last_data_line
+  local last_data_line
+  declare -i counter last_height
   counter=0
   last_height=0
   last_data_line=''
