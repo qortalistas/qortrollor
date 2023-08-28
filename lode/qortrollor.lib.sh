@@ -966,7 +966,7 @@ monitor_loop() {
     #    #    printf "%s %04d\n" "$timestamp" "$counter"
     #    #    printf "%s %04d\n" "$timestamp" "$counter"
 #    if [[ ${info_line} != "${last_info}" ]]; then
-    if [[ ${data_line} != "${last_data_line}" ]]; then
+    if [[ "${data_line}" != "${last_data_line}" ]]; then
       printf -v output_line "%s %04d %s %s" "${timestamp}" "${counter}" "${elap_sec}" "${info_line}"
       echo "${output_line}"
       last_info="${info_line}"
