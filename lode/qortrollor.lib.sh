@@ -930,8 +930,9 @@ test_command() {
 monitor() {
   debug_func "$@"
   local last_data_line
-  declare -i counter last_height
+  declare -i counter last_height peer_highest
   counter=0
+  peer_highest=0
   last_height=0
   last_data_line=''
   local timestamp #info_line
@@ -955,10 +956,10 @@ monitor_loop() {
     elap_sec=$(printf "%02.1f" "${elapsed_time}")                              # Format with one decimal place
 
     local elapsed_seconds zero_padded_seconds formatted_elapsed_time
-    elapsed_seconds=$(printf "%.1f" "$elapsed_time")                      # Format with one decimal place
-    seconds_before_decimal=${elapsed_seconds%.*}                          # Extract seconds before decimal
-    zero_padded_seconds=$(printf "%02d" "$seconds_before_decimal")        # Zero-pad
-    elap_sec="${zero_padded_seconds}.${elapsed_seconds#*.}" # Combine zero-padded seconds with milliseconds
+    elapsed_seconds=$(printf "%.1f" "$elapsed_time")               # Format with one decimal place
+    seconds_before_decimal=${elapsed_seconds%.*}                   # Extract seconds before decimal
+    zero_padded_seconds=$(printf "%02d" "$seconds_before_decimal") # Zero-pad
+    elap_sec="${zero_padded_seconds}.${elapsed_seconds#*.}"        # Combine zero-padded seconds with milliseconds
 
     #    printf -v info_line "%s" 'blah'
     info_line=''
@@ -966,7 +967,7 @@ monitor_loop() {
     #    printf -v info_line "%s" 'blah'
     #    #    printf "%s %04d\n" "$timestamp" "$counter"
     #    #    printf "%s %04d\n" "$timestamp" "$counter"
-#    if [[ ${info_line} != "${last_info}" ]]; then
+    #    if [[ ${info_line} != "${last_info}" ]]; then
     if [[ "${data_line}" -ne "${last_data_line}" ]]; then
       printf -v output_line "%s %04d %s %s" "${timestamp}" "${counter}" "${elap_sec}" "${info_line}"
       echo "${output_line}"
@@ -995,7 +996,10 @@ monitor_iteration() {
     peers=$(curl -s -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json")
     peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
     #    peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
-    peer_highest=$(echo "${peer_heights}" | sort -n | tail -1)
+    peer_new_highest=$(echo "${peer_heights}" | sort -n | tail -1)
+    if [[ ${peer_new_highest} -gt ${peer_highest} ]]; then
+      peer_highest=${peer_new_highest}
+    fi
     diff=$((peer_highest - api_height))
     height_progress=$((api_height - last_height))
     last_height=${api_height}
