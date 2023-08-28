@@ -933,7 +933,7 @@ monitor() {
   declare -i counter last_height peer_highest
   counter=0
   peer_highest=0
-  last_height=0
+  last_height=-1
   last_data_line=''
   local timestamp #info_line
   timestamp=$(date +"%Y-%m-%d %H:%M:%S")
@@ -998,11 +998,18 @@ monitor_iteration() {
     #    peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
     peer_new_highest=$(echo "${peer_heights}" | sort -n | tail -1)
     peer_highest_diff=0
+
+    if [[ ${last_height} -lt 0 ]]; then
+      last_height=api_height
+      peer_highest=${peer_new_highest}
+    fi
+
     if [[ ${peer_new_highest} -gt ${peer_highest} ]]; then
       peer_highest_diff=$((peer_new_highest - peer_highest))
       peer_highest=${peer_new_highest}
     fi
     diff=$((peer_highest - api_height))
+
     height_progress=$((api_height - last_height))
     last_height=${api_height}
 
