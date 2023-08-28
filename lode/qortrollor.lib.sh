@@ -731,6 +731,12 @@ texting() {
   "texting_${instrux}" "$@"
 }
 
+get_nano_time() {
+  local nano_time
+  nano_time=$(date +%s.%N)
+  echo "${nano_time}"
+}
+
 test() {
   debug "test qortrollor.lib $*"
 }
@@ -918,22 +924,15 @@ test_command() {
 # endregion command
 
 # region monitor
-#monitor() {
-#  debug_func "$@"
-#  local counter timestamp
-#  counter=0
-#  #  timestamp=date in this format: <2023-08-23 23:52:13>
-#  # until user aborts for loop printf timestamp and counter every 1 second:
-#
-#}
 
 monitor() {
   debug_func "$@"
   local last_data_line
-  declare -i counter last_height peer_high
+  declare -i counter last_height peer_high last_diff
   counter=0
   peer_high=0
   last_height=-1
+  #  last_diff=0
   last_data_line=''
   local timestamp #info_line
   timestamp=$(date +"%Y-%m-%d %H:%M:%S")
@@ -982,11 +981,11 @@ monitor_loop() {
   done
 }
 
-get_nano_time() {
-  local nano_time
-  nano_time=$(date +%s.%N)
-  echo "${nano_time}"
-}
+#get_nano_time() {
+#  local nano_time
+#  nano_time=$(date +%s.%N)
+#  echo "${nano_time}"
+#}
 
 monitor_iteration() {
   api_get_higehst_peer_height() {
@@ -1011,6 +1010,11 @@ monitor_iteration() {
       peer_high=${peer_new_high}
     fi
     diff=$((peer_high - api_height))
+    if [[ -z ${last_diff} ]]; then
+      last_diff=${diff}
+    fi
+    diff_progress=$((diff - last_diff))
+    last_diff=${diff}
 
     #    info_line+="  api_height: ${api_height}  peer_heights: ${peer_heights}"
     #    info_line+="  api_height: ${api_height}  peer_high: ${peer_high}"
@@ -1018,12 +1022,12 @@ monitor_iteration() {
     #    info_line+="  self: ${api_height}  high: ${peer_high}  diff: ${diff}  prog: ${height_progress}/${peer_high_progress}"
     #    printf -v info_line '%s self: %s  high: %s  diff: %s  prog: %s/%s'  "${info_line}" "${api_height}" "${peer_high}" "${diff}" "${height_progress}" "${peer_high_progress}"
 
-#    height_progress_aligned="${height_progress}"
-#    if [[ ${height_progress} -gt 0 ]]; then
-#      height_progress_aligned="+${height_progress}"
-#    elif [[ ${height_progress} == 0 ]]; then
-#      height_progress=" ${height_progress}"
-#    fi
+    #    height_progress_aligned="${height_progress}"
+    #    if [[ ${height_progress} -gt 0 ]]; then
+    #      height_progress_aligned="+${height_progress}"
+    #    elif [[ ${height_progress} == 0 ]]; then
+    #      height_progress=" ${height_progress}"
+    #    fi
 
     #    height_progress_aligned="${height_progress}"
     #    if [[ ${height_progress} -gt 0 ]]; then
@@ -1041,7 +1045,7 @@ monitor_iteration() {
 
     declare -a arguments=("${info_line}"
       "${api_height}" "${peer_high}"
-      "${height_progress}" "${peer_high_progress}" "${diff}"
+      "${height_progress}" "${peer_high_progress}"
     )
     #    printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' "${arguments[@]}"
 
@@ -1051,6 +1055,14 @@ monitor_iteration() {
       printf -v info_line '%s heights: %s/%s  prog: \033[31m%s\033[0m/%s  diff: %s' "${arguments[@]}"
     else
       printf -v info_line '%s heights: %s/%s  prog:  %s/%s  diff: %s' "${arguments[@]}"
+    fi
+
+    if [[ ${diff_progress} -gt 0 ]]; then
+      printf -v info_line '%s  diff: \033[32m%s\033[0m' "${info_line}" "${diff}"
+    elif [[ ${diff_progress} -lt 0 ]]; then
+      printf -v info_line '%s  diff: \033[31m%s\033[0m' "${info_line}" "${diff}"
+    else
+      printf -v info_line '%s  diff: %s' "${info_line}" "${diff}"
     fi
 
   }
