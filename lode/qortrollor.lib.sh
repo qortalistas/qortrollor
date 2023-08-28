@@ -1030,7 +1030,7 @@ monitor_iteration() {
     diff_progress=$((diff - last_diff))
     last_diff=${diff}
 
-    data_line="${api_height}_${peer_high}_${peer_count}" # ,${diff}
+    data_line="${api_height}_${peer_high}" # ,${diff} _${peer_count}
 
     declare -a arguments=("${info_line}"
       "${peer_count}" "${api_height}" "${peer_high}"
