@@ -997,28 +997,29 @@ monitor_iteration() {
     peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
     #    peer_highest=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
     peer_new_highest=$(echo "${peer_heights}" | sort -n | tail -1)
-    peer_highest_diff=0
 
     if [[ ${last_height} -lt 0 ]]; then
       last_height=api_height
       peer_highest=${peer_new_highest}
     fi
+    diff=$((peer_highest - api_height))
+    height_progress=$((api_height - last_height))
+    last_height=${api_height}
 
+    peer_highest_diff=0
     if [[ ${peer_new_highest} -gt ${peer_highest} ]]; then
       peer_highest_diff=$((peer_new_highest - peer_highest))
       peer_highest=${peer_new_highest}
     fi
-    diff=$((peer_highest - api_height))
-
-    height_progress=$((api_height - last_height))
-    last_height=${api_height}
 
     #    info_line+="  api_height: ${api_height}  peer_heights: ${peer_heights}"
     #    info_line+="  api_height: ${api_height}  peer_highest: ${peer_highest}"
     data_line="${api_height},${peer_highest}" # ,${diff}
     #    info_line+="  self: ${api_height}  high: ${peer_highest}  diff: ${diff}  prog: ${height_progress}/${peer_highest_diff}"
     #    printf -v info_line '%s self: %s  high: %s  diff: %s  prog: %s/%s'  "${info_line}" "${api_height}" "${peer_highest}" "${diff}" "${height_progress}" "${peer_highest_diff}"
-    printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' "${info_line}" "${api_height}" "${peer_highest}" "${height_progress}" "${peer_highest_diff}" "${diff}"
+    printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' \
+      "${info_line}" "${api_height}" "${peer_highest}" \
+      "${height_progress}" "${peer_highest_diff}" "${diff}"
   }
 
   api_get_higehst_peer_height
