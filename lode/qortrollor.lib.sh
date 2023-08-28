@@ -994,11 +994,13 @@ monitor_iteration() {
   api_get_higehst_peer_height() {
     local peers peer_heights
     declare -i api_height peer_new_high diff peer_high_progress
-    if ! api_height=$(curl -s -f "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height'); then
-      echo 'curl api_height FAILED'
+    if ! status=$(curl -s -f "${QORTAL_API_BASE_URL}/admin/status") ; then
+      echo 'curl status FAILED'
       return 1
     fi
-    if ! peers=$(curl -s -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json"); then
+#    api_height=$(curl -s -f "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
+    api_height=$(echo "${status}" | jq -r '.height')
+    if ! peers=$(curl -f -s -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json"); then
       echo 'curl peers FAILED'
       return 1
     fi
