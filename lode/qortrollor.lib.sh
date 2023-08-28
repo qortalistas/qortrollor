@@ -991,31 +991,30 @@ get_nano_time() {
 monitor_iteration() {
   api_get_higehst_peer_height() {
     local peers peer_heights
-    declare -i api_height peer_new_highest diff peer_high_progress
+    declare -i api_height peer_new_high diff peer_high_progress
     api_height=$(curl -s "${QORTAL_API_BASE_URL}/admin/status" | jq -r '.height')
     peers=$(curl -s -X GET "${QORTAL_API_BASE_URL}/peers" -H "accept: application/json")
     peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
-    #    peer_high=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight' | sort -n | tail -1)
-    peer_new_highest=$(echo "${peer_heights}" | sort -n | tail -1)
+    peer_new_high=$(echo "${peer_heights}" | sort -n | tail -1)
 
     if [[ ${last_height} -lt 0 ]]; then
       messagize_noisy "first time"
       last_height=api_height
-      peer_high=${peer_new_highest}
+      peer_high=${peer_new_high}
     fi
     diff=$((peer_high - api_height))
     height_progress=$((api_height - last_height))
     last_height=${api_height}
 
     peer_high_progress=0
-    if [[ ${peer_new_highest} -gt ${peer_high} ]]; then
-      peer_high_progress=$((peer_new_highest - peer_high))
-      peer_high=${peer_new_highest}
+    if [[ ${peer_new_high} -gt ${peer_high} ]]; then
+      peer_high_progress=$((peer_new_high - peer_high))
+      peer_high=${peer_new_high}
     fi
 
     #    info_line+="  api_height: ${api_height}  peer_heights: ${peer_heights}"
     #    info_line+="  api_height: ${api_height}  peer_high: ${peer_high}"
-    data_line="${api_height},${peer_high}" # ,${diff}
+    data_line="${api_height}_${peer_high}" # ,${diff}
     #    info_line+="  self: ${api_height}  high: ${peer_high}  diff: ${diff}  prog: ${height_progress}/${peer_high_progress}"
     #    printf -v info_line '%s self: %s  high: %s  diff: %s  prog: %s/%s'  "${info_line}" "${api_height}" "${peer_high}" "${diff}" "${height_progress}" "${peer_high_progress}"
     printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' \
@@ -1069,7 +1068,7 @@ monitor_by_logfile() {
   tail -f "${QORTAL_LOG_FILE}" | while read -r line; do
     timestamp=$(echo "${line}" | grep -oP '\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}')
     counter=$((counter + 1))
-    #    new_high=$(extract_highest_height "${line}")
+    #    new_high=$(extract_high_height "${line}")
     #    if [[ -n "${new_high}" && ${new_high} -gt ${high} ]]; then
     #      high="${new_high}"
     #    fi
