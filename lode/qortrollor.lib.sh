@@ -1058,7 +1058,7 @@ monitor_iteration() {
     fi
 
     if [[ ${peer_high_progress} -gt 0 ]]; then
-      printf -v info_line '%s/\033[34m%s\033[0m' "${info_line}" "${peer_high_progress}"
+      printf -v info_line '%s/\033[33m%s\033[0m' "${info_line}" "${peer_high_progress}"
     else
       printf -v info_line '%s/%s' "${info_line}" "${peer_high_progress}"
     fi
