@@ -1002,7 +1002,6 @@ monitor_iteration() {
       last_height=api_height
       peer_high=${peer_new_high}
     fi
-    diff=$((peer_high - api_height))
     height_progress=$((api_height - last_height))
     last_height=${api_height}
 
@@ -1011,6 +1010,7 @@ monitor_iteration() {
       peer_high_progress=$((peer_new_high - peer_high))
       peer_high=${peer_new_high}
     fi
+    diff=$((peer_high - api_height))
 
     #    info_line+="  api_height: ${api_height}  peer_heights: ${peer_heights}"
     #    info_line+="  api_height: ${api_height}  peer_high: ${peer_high}"
