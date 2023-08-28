@@ -993,7 +993,7 @@ monitor_loop() {
 monitor_iteration() {
   api_get_higehst_peer_height() {
     local peers peer_heights
-    declare -i api_height peer_new_high diff peer_high_progress peer_heights_count
+    declare -i api_height peer_new_high diff peer_high_progress peer_count
     if ! status=$(curl -s -f "${QORTAL_API_BASE_URL}/admin/status"); then
       echo 'curl status FAILED'
       return 1
@@ -1007,8 +1007,8 @@ monitor_iteration() {
 
     peer_heights=$(echo "$peers" | jq -r '.[] | select(.lastHeight) | .lastHeight')
     peer_new_high=$(echo "${peer_heights}" | sort -n | tail -1)
-    #    peer_heights_count=$(echo "$peer_heights" | jq length)
-    peer_heights_count=$(echo "$peer_heights" | wc -l)
+    #    peer_count=$(echo "$peer_heights" | jq length)
+    peer_count=$(echo "$peer_heights" | wc -l)
 
     if [[ ${last_height} -lt 0 ]]; then
       #      messagize_noisy "first time"
@@ -1030,10 +1030,10 @@ monitor_iteration() {
     diff_progress=$((diff - last_diff))
     last_diff=${diff}
 
-    data_line="${api_height}_${peer_high}" # ,${diff}
+    data_line="${api_height}_${peer_high}_${peer_count}" # ,${diff}
 
     declare -a arguments=("${info_line}"
-      "${peer_heights_count}" "${api_height}" "${peer_high}"
+      "${peer_count}" "${api_height}" "${peer_high}"
       "${height_progress}"
     )
     #    printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' "${arguments[@]}"
