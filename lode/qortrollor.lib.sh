@@ -1058,9 +1058,9 @@ monitor_iteration() {
     fi
 
     if [[ ${diff_progress} -gt 0 ]]; then
-      printf -v info_line '%s  diff: \033[32m%s\033[0m' "${info_line}" "${diff}"
-    elif [[ ${diff_progress} -lt 0 ]]; then
       printf -v info_line '%s  diff: \033[31m%s\033[0m' "${info_line}" "${diff}"
+    elif [[ ${diff_progress} -lt 0 ]]; then
+      printf -v info_line '%s  diff: \033[32m%s\033[0m' "${info_line}" "${diff}"
     else
       printf -v info_line '%s  diff: %s' "${info_line}" "${diff}"
     fi
