@@ -733,7 +733,9 @@ texting() {
 
 get_nano_time() {
   local nano_time
-  nano_time=$(date +%s.%N)
+  decimal_separator=$(locale decimal_point)
+  #  nano_time=$(date +%s.%N)
+  nano_time=$(date +%s"${decimal_separator}"%N)
   echo "${nano_time}"
 }
 
@@ -950,9 +952,12 @@ monitor_loop() {
     counter=$((counter + 1))
     timestamp=$(date +"%Y-%m-%d %H:%M:%S")
     cur_nano_time=$(get_nano_time)
+        debug "cur_nano_time: ${cur_nano_time}"
     #    elapsed_time=$(echo "${cur_nano_time} - ${last_nano_time}" | bc -l) # Calculate elapsed time
     elapsed_time=$(awk "BEGIN { print ${cur_nano_time} - ${last_nano_time} }") # Calculate elapsed time
-    elap_sec=$(printf "%02.1f" "${elapsed_time}")                              # Format with one decimal place
+        debug "elapsed_time: ${elapsed_time}"
+    elap_sec=$(printf "%02.1f" "${elapsed_time}") # Format with one decimal place
+        debug "elap_sec: ${elap_sec}"
 
     local elapsed_seconds zero_padded_seconds
     elapsed_seconds=$(printf "%.1f" "$elapsed_time")               # Format with one decimal place
