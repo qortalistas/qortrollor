@@ -733,9 +733,9 @@ texting() {
 
 get_nano_time() {
   local nano_time
-  decimal_separator=$(locale decimal_point)
-  #  nano_time=$(date +%s.%N)
-  nano_time=$(date +%s"${decimal_separator}"%N)
+  #  decimal_separator=$(locale decimal_point)
+  nano_time=$(date +%s.%N)
+  #  nano_time=$(date +%s"${decimal_separator}"%N)
   echo "${nano_time}"
 }
 
@@ -945,6 +945,20 @@ monitor() {
   monitor_loop
 }
 
+dotseparatize() {
+  num=$1
+  decimal_separator=$(locale decimal_point)
+  num_dot=${num//./$decimal_separator}
+  printf '%s' "${num_dot}"
+}
+
+decimalize() {
+  num=$1
+  decimal_separator=$(locale decimal_point)
+  num_dot=${num//./$decimal_separator}
+  printf '%.1f' "${num_dot}"
+}
+
 monitor_loop() {
   local data_line last_info output_line last_nano_time cur_nano_time elapsed_time elap_sec
   last_nano_time=$(get_nano_time)
@@ -952,26 +966,11 @@ monitor_loop() {
     counter=$((counter + 1))
     timestamp=$(date +"%Y-%m-%d %H:%M:%S")
     cur_nano_time=$(get_nano_time)
-        debug "cur_nano_time: ${cur_nano_time}"
-    #    elapsed_time=$(echo "${cur_nano_time} - ${last_nano_time}" | bc -l) # Calculate elapsed time
     elapsed_time=$(awk "BEGIN { print ${cur_nano_time} - ${last_nano_time} }") # Calculate elapsed time
-        debug "elapsed_time: ${elapsed_time}"
-    elap_sec=$(printf "%02.1f" "${elapsed_time}") # Format with one decimal place
-        debug "elap_sec: ${elap_sec}"
-
-    local elapsed_seconds zero_padded_seconds
-    elapsed_seconds=$(printf "%.1f" "$elapsed_time")               # Format with one decimal place
-    seconds_before_decimal=${elapsed_seconds%.*}                   # Extract seconds before decimal
-    zero_padded_seconds=$(printf "%02d" "$seconds_before_decimal") # Zero-pad
-    elap_sec="${zero_padded_seconds}.${elapsed_seconds#*.}"        # Combine zero-padded seconds with milliseconds
-
-    #    printf -v info_line "%s" 'blah'
+    elap_sec="$(decimalize "${elapsed_time}")"
+    elap_sec=$(printf "%4s" "${elap_sec}") # Zero-pad
     info_line=''
     monitor_iteration
-    #    printf -v info_line "%s" 'blah'
-    #    #    printf "%s %04d\n" "$timestamp" "$counter"
-    #    #    printf "%s %04d\n" "$timestamp" "$counter"
-    #    if [[ ${info_line} != "${last_info}" ]]; then
     if [[ "${data_line}" != "${last_data_line}" ]]; then
       printf -v output_line "%s %04d %s %s" "${timestamp}" "${counter}" "${elap_sec}" "${info_line}"
       echo "${output_line}"
@@ -979,18 +978,9 @@ monitor_loop() {
       last_data_line="${data_line}"
       last_nano_time=${cur_nano_time}
     fi
-    #    printf -v output_line "%s %04d %s" "${timestamp}" "${counter}" "${info_line}"
-    #    echo "${output_line}"
-    #    last_info="${info_line}"
     sleep 1
   done
 }
-
-#get_nano_time() {
-#  local nano_time
-#  nano_time=$(date +%s.%N)
-#  echo "${nano_time}"
-#}
 
 monitor_iteration() {
   api_get_higehst_peer_height() {
