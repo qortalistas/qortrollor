@@ -1020,6 +1020,8 @@ monitor_iteration() {
 
     if [[ ${height_progress} -gt 0 ]]; then
       height_progress="+${height_progress}"
+    elif [[ ${height_progress} == 0 ]]; then
+      height_progress=" ${height_progress}"
     fi
 
     printf -v info_line '%s heights: %s/%s  prog: %s/%s  diff: %s' \
