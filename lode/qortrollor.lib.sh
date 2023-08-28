@@ -945,6 +945,7 @@ monitor() {
   monitor_loop
 }
 
+
 dotseparatize() {
   num=$1
   decimal_separator=$(locale decimal_point)
