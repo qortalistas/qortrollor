@@ -949,7 +949,13 @@ monitor_loop() {
     cur_nano_time=$(get_nano_time)
     #    elapsed_time=$(echo "${cur_nano_time} - ${last_nano_time}" | bc -l) # Calculate elapsed time
     elapsed_time=$(awk "BEGIN { print ${cur_nano_time} - ${last_nano_time} }") # Calculate elapsed time
-    elap_sec=$(printf "%02.1f" "${elapsed_time}")                                # Format with one decimal place
+    elap_sec=$(printf "%02.1f" "${elapsed_time}")                              # Format with one decimal place
+
+    local elapsed_seconds zero_padded_seconds formatted_elapsed_time
+    elapsed_seconds=$(printf "%.1f" "$elapsed_time")                      # Format with one decimal place
+    seconds_before_decimal=${elapsed_seconds%.*}                          # Extract seconds before decimal
+    zero_padded_seconds=$(printf "%02d" "$seconds_before_decimal")        # Zero-pad
+    elap_sec="${zero_padded_seconds}.${elapsed_seconds#*.}" # Combine zero-padded seconds with milliseconds
 
     #    printf -v info_line "%s" 'blah'
     info_line=''
